@@ -10,6 +10,7 @@ import UIKit
 extension UILabel {
     func setWeatherInfo(temp: Double, temp_min: Double, temp_max: Double, hum: Double, speed: Double) {
         font = UIFont.systemFont(ofSize: 14)
+        textColor = .black
         text = """
 \(Date().nowDateToString())
 현재 온도: \(temp)°C

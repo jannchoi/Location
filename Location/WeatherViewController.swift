@@ -50,6 +50,24 @@ final class WeatherViewController: UIViewController {
         button.layer.shadowRadius = 4
         return button
     }()
+    private let photoButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "photo.artframe.circle"), for: .normal)
+        button.backgroundColor = .white
+        button.tintColor = .systemBlue
+        button.layer.cornerRadius = 25
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOffset = CGSize(width: 0, height: 2)
+        button.layer.shadowOpacity = 0.2
+        button.layer.shadowRadius = 4
+        return button
+    }()
+    
+    private let photoImageView: UIImageView = {
+        let img = UIImageView()
+        img.image = UIImage(systemName: "photo.artframe")
+        return img
+    }()
     
     lazy var locationManager = CLLocationManager()
     
@@ -68,7 +86,7 @@ final class WeatherViewController: UIViewController {
     private func setupUI() {
         view.backgroundColor = .white
         
-        [mapView, weatherInfoLabel, currentLocationButton, refreshButton].forEach {
+        [mapView, weatherInfoLabel, currentLocationButton, refreshButton, photoButton, photoImageView].forEach {
             view.addSubview($0)
         }
     }
@@ -95,13 +113,32 @@ final class WeatherViewController: UIViewController {
             make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-20)
             make.width.height.equalTo(50)
         }
+        photoButton.snp.makeConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-20)
+            make.centerX.equalTo(view.safeAreaLayoutGuide)
+            make.width.height.equalTo(50)
+            
+        }
+        photoImageView.snp.makeConstraints { make in
+            make.centerX.equalTo(photoButton)
+            make.top.equalTo(weatherInfoLabel.snp.bottom).offset(10)
+            make.size.equalTo(100)
+        }
     }
     
     private func setupActions() {
         currentLocationButton.addTarget(self, action: #selector(currentLocationButtonTapped), for: .touchUpInside)
         refreshButton.addTarget(self, action: #selector(refreshButtonTapped), for: .touchUpInside)
+        photoButton.addTarget(self, action: #selector(photoButtonTapped), for: .touchUpInside)
     }
-    
+    @objc private func photoButtonTapped() {
+        let vc = PhotoViewController()
+        vc.content = {
+            img in
+            self.photoImageView.image = img
+        }
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
     // MARK: - Actions
     @objc private func currentLocationButtonTapped() {
         // 현재 위치 가져오기 구현
